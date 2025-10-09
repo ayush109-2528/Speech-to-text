@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../Superbase Auth/SupabaseClient";
+import { uploadAudio, getTranscriptions } from '../api';
 import axios from "axios";
-import SignOutButton from "../Superbase Auth/SignOutButton";
 export default function SpeechToTextApp({ session }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
