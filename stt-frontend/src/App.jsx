@@ -1,66 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "./Components/Superbase Auth/SupabaseClient";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import SupabaseAuth from "./Components/Superbase Auth/SupabaseAuth";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+
+import SignInPage from "./Components/Superbase Auth/SignIn";
 import SpeechToTextApp from "./Components/speech to text/SpeechToTextApp";
-import SignOutButton from "./Components/Superbase Auth/SignOutButton";
+import LandingPage from "./Components/Home/LandingPage";
+import SignUpPage from "./Components/Superbase Auth/Signup";  // check if this is right, SignOut as SignUp?
+import ResetPassword from "./Components/Superbase Auth/ResetPassword";
+import ForgotPasswordPage from "./Components/Superbase Auth/ForgotPassword";
 
-function PrivateRoute({ session, children }) {
-  if (!session) {
-    return <Navigate to="/auth" replace />;
-  }
-  return children;
-}
-
-function PublicRoute({ session, children }) {
-  if (session) {
-    return <Navigate to="/" replace />;
-  }
-  return children;
-}
+import supabase from "./Components/Superbase Auth/SupabaseClient";
 
 export default function App() {
-  const [session, setSession] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
     });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => listener?.subscription.unsubscribe();
   }, []);
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/auth"
-          element={
-            <PublicRoute session={session}>
-              <SupabaseAuth />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/*"
-          element={
-            <PrivateRoute session={session}>
-              <header className="p-4 flex justify-end bg-white shadow">
-                <SignOutButton />
-              </header>
-              <SpeechToTextApp session={session} />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  );
+ const routes = [
+    { path: "/", element: <LandingPage /> },
+    { path: "/signin", element: <SignInPage /> },
+    { path: "/signup", element: <SignUpPage /> },
+    { path: "/forgot", element: <ForgotPasswordPage /> },
+    { path: "/reset", element: <ResetPassword /> },
+    {
+      path: "/dashboard",
+      element: user ? <SpeechToTextApp user={user} setUser={setUser} /> : <Navigate to="/signin" />,
+    },
+    { path: "*", element: <LandingPage /> }
+  ];
+
+  const router = createBrowserRouter(routes, {
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    },
+  });
+
+
+  return <RouterProvider  future={{ v7_startTransition: true }} router={router} />;
 }

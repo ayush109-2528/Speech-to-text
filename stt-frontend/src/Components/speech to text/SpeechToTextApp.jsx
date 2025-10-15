@@ -1,9 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import supabase from "../Superbase Auth/SupabaseClient";
+import NavBar from "../Navbar.jsx/Navbar";
+import FileUploader from "../File upload/FileUploader";
+import RecordingControls from "../audiorecorder/AudioRecorder";
+import WaveformCanvas from "../Canvas/WaveformCanvas";
+import StatusMessage from "../status/StatusMessage";
+import Mp3Player from "../audiorecorder/Mp3Player";
+import TranscriptionResult from "../Transciption/TranscriptionResult";
+import TranscriptionHistory from "../Transciption/TranscriptionHistory";
+//Supabase intialization
+// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function SpeechToTextApp() {
   const [user, setUser] = useState(null);
@@ -113,18 +121,16 @@ export default function SpeechToTextApp() {
       setStatus("Upload failed: " + err.message);
     }
     setLoading(false);
-  }
+  } // Waveform drawing functions here... (same as your code)
 
-  // Waveform drawing functions here... (same as your code)
   function drawWaveform() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
-    const height = canvas.height;
+    const height = canvas.height; // Clear previous frame
 
-    // Clear previous frame
     ctx.clearRect(0, 0, width, height);
 
     if (!analyser.current) return;
@@ -132,7 +138,7 @@ export default function SpeechToTextApp() {
     analyser.current.getByteTimeDomainData(dataArray.current);
 
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#050505ff"; // green color for waveform
+    ctx.strokeStyle = "#a78bfa"; // Tailwind indigo-400 for waveform line
 
     ctx.beginPath();
 
@@ -140,27 +146,23 @@ export default function SpeechToTextApp() {
     let x = 0;
 
     for (let i = 0; i < dataArray.current.length; i++) {
-      const v = dataArray.current[i] / 128.0; // normalize byte 0-255 to 0-2
+      const v = dataArray.current[i] / 128.0;
       const y = (v * height) / 2;
 
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+
       x += sliceWidth;
     }
 
     ctx.lineTo(width, height / 2);
-    ctx.stroke();
+    ctx.stroke(); // Request next frame
 
-    // Request next frame
     animationId.current = requestAnimationFrame(drawWaveform);
   }
 
   async function startRecording() {
     // After connecting analyser and creating dataArray:
-    drawWaveform();
 
     if (!userId) {
       setStatus("Please log in first");
@@ -180,6 +182,7 @@ export default function SpeechToTextApp() {
       source.current = audioContext.current.createMediaStreamSource(stream);
       source.current.connect(analyser.current);
 
+      drawWaveform();
       mediaRecorder.current = new MediaRecorder(stream, {
         mimeType: "audio/webm",
       });
@@ -208,8 +211,8 @@ export default function SpeechToTextApp() {
     }
   }
   function clearCanvas() {
+    cancelAnimationFrame(animationId.current);
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
@@ -236,37 +239,7 @@ export default function SpeechToTextApp() {
       }
       setRecording(false);
     }
-  }
-  // async function saveTranscription(req, transcriptionText, audioUrl = null) {
-  //   const userId = req.headers["x-user-id"];
-
-  //   if (userId) {
-  //     // Check user exists only if userId is provided
-  //     const { data: user, error: userErr } = await supabase
-  //       .from("auth.users")
-  //       .select()
-  //       .eq("id", userId)
-  //       .single();
-
-  //     if (userErr || !user) {
-  //       throw new Error("User does not exist");
-  //     }
-  //   }
-
-  //   // Insert with user_id or null
-  //   const { data, error } = await supabase.from("transcriptions").insert([
-  //     {
-  //       transcription: transcriptionText,
-  //       audio_url: audioUrl,
-  //       user_id: userId || null,
-  //     },
-  //   ]);
-
-  //   if (error) {
-  //     throw error;
-  //   }
-  //   return data;
-  // }
+  } // async function saveTranscription(req, transcriptionText, audioUrl = null) { //   const userId = req.headers["x-user-id"] || null; //   if (userId) { //     const { data, error } = await supabase //       .from("auth.users") //       .select() //       .eq("id", userId) //       .single(); //     if (error || !data) { //       console.warn( //         `User with ID ${userId} does not exist, saving transcription without user association.` //       ); //       // Don't throw, allow save without user_id //     } //   } //   const { data: insertData, error: insertError } = await supabase //     .from("transcriptions") //     .insert([ //       { //         transcription: transcriptionText, //         audio_url: audioUrl, //         user_id: userId, //       }, //     ]); //   if (insertError) throw insertError; //   return insertData; // }
   async function handleDelete(id) {
     if (!id) return;
     setLoading(true);
@@ -279,8 +252,7 @@ export default function SpeechToTextApp() {
         const data = await res.json();
         setStatus("Delete failed: " + (data.error || "Unknown error"));
       } else {
-        setStatus("Deleted successfully");
-        // Remove deleted transcription from state
+        setStatus("Deleted successfully"); // Remove deleted transcription from state
         setHistory((prev) => prev.filter((item) => item.id !== id));
       }
     } catch (err) {
@@ -290,113 +262,63 @@ export default function SpeechToTextApp() {
   }
 
   return (
-    <div className="max-w-xl mx-auto my-8 p-8 rounded-lg shadow-lg bg-gradient-to-br from-purple-700 via-pink-600 to-red-500 text-white font-sans">
-      <h1 className="text-4xl font-bold mb-8 text-center drop-shadow-lg">
-        Speech to Text
-      </h1>
-      {/* File Upload */}
-      <div className="mb-6 flex items-center space-x-4">
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={handleFileChange}
-          disabled={loading || recording}
-          className="text-black p-2 rounded"
-        />
-        <button
-          onClick={uploadFile}
-          disabled={!file || loading || recording}
-          className="px-5 py-2 bg-yellow-400 hover:bg-yellow-300 rounded shadow font-semibold text-black"
-        >
-          {loading ? "Processing..." : "Upload & Transcribe"}
-        </button>
-      </div>
-      {/* Recording Controls */}
-      <div className="mb-6 text-center">
-        <button
-          onClick={recording ? stopRecording : startRecording}
-          disabled={loading}
-          className={`px-10 py-3 rounded-full font-bold shadow-lg transition-colors duration-300 ${
-            recording
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          {recording ? "Stop Recording" : "Start Recording"}
-        </button>
-      </div>
-      {/* Waveform Canvas */}
-      <canvas
-        ref={canvasRef}
-        width={500}
-        height={100}
-        className="w-full rounded-lg shadow-lg border-4 border-white bg-black mb-6"
+    <div className="relative min-h-screen w-full">
+      {/* Fixed background layer */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          background:
+            "url('/src/assets/background1.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+        }}
       />
-      {/* Status */}
-      {status && (
-        <div className="mb-4 text-center font-semibold text-yellow-300">
-          {status}
+
+      {/* Main content overlay */}
+      <div className="relative z-10 min-h-screen flex flex-col justify-start items-start pt-20 px-4 md:px-8 w-full max-w-xl mx-auto">
+        <NavBar user={user} onSignOut={() => setUser(null)} />
+
+        <div className="bg-white/90 rounded-2xl shadow-2xl px-10 py-8 md:px-16 md:py-12 max-w-xl mx-auto overflow-y-auto">
+          <div className="mb-8 flex flex-col items-center text-center">
+            <img
+              src="/src/assets/mic.png"
+              alt="Speech Icon"
+              className="w-16 h-16 mb-4 rounded-2xl"
+            />
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
+              Speech to Text Converter
+            </h1>
+            <p className="text-md text-gray-500 mt-2">
+              Upload or record audio and get instant, accurate transcription.
+            </p>
+          </div>
+
+          <FileUploader
+            file={file}
+            onFileChange={handleFileChange}
+            onUpload={uploadFile}
+            loading={loading}
+            recording={recording}
+          />
+          <RecordingControls
+            recording={recording}
+            loading={loading}
+            onStart={startRecording}
+            onStop={stopRecording}
+          />
+          <WaveformCanvas canvasRef={canvasRef} />
+          <StatusMessage status={status} />
+          <Mp3Player mp3Url={mp3Url} />
+          <TranscriptionResult transcription={transcription} />
+          <TranscriptionHistory
+            history={history}
+            loading={loading}
+            mp3Url={mp3Url}
+            onDelete={handleDelete}
+          />
         </div>
-      )}
-      {/* MP3 Player */}
-      {mp3Url && (
-        <div className="mb-6 p-4 bg-white rounded-lg shadow text-black">
-          <h3 className="mb-2 font-semibold text-center">Recorded Audio</h3>
-          <audio controls src={mp3Url} className="w-full" />
-        </div>
-      )}
-      {/* Transcription Result */}
-      {transcription && (
-        <div className="mb-6 p-4 bg-white rounded-lg shadow text-black">
-          <h3 className="mb-2 font-semibold">Transcription Result</h3>
-          <pre className="whitespace-pre-wrap">{transcription}</pre>
-        </div>
-      )}
-      {/* History */}
-      <div className="p-4 bg-white rounded-lg shadow text-black">
-        <h3 className="mb-4 font-semibold text-center">
-          Transcription History
-        </h3>
-        {loading && !mp3Url ? (
-          <p className="text-center">Loading...</p>
-        ) : history.length === 0 ? (
-          <p className="text-center">No previous transcriptions.</p>
-        ) : (
-          <ul className="space-y-3">
-            {history.map((item) => (
-              <li
-                key={item.id || item.created_at}
-                className="border p-3 rounded hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-              >
-                <div>
-                  {item.audio_url && (
-                    <a
-                      href={item.audio_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      Audio File
-                    </a>
-                  )}
-                  <p className="mt-2 whitespace-pre-wrap">
-                    {item.transcription}
-                  </p>
-                  <small className="text-gray-600">
-                    {new Date(item.created_at).toLocaleString()}
-                  </small>
-                </div>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="ml-2 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+
+      {/* Bottom gradient fade */}
+      <div className="fixed bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-20" />
     </div>
   );
 }
