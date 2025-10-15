@@ -1,4 +1,4 @@
-Speech-to-Text React App with Supabase & OpenAI
+Speech-to-Text React App with Supabase & Datagram
 
 A modern web application for converting speech (MP4 audio/video) to text with user authentication using Supabase Auth and transcription via OpenAI Whisper API.
 Features
@@ -36,7 +36,7 @@ Create a .env file in the project root with the following keys:
 text
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_OPENAI_API_KEY=your-openai-api-key
+VITE_Datagram_API_KEY=your-openai-api-key
 
 Installation
 
@@ -106,7 +106,7 @@ Technologies Used
 
     Vite development server
 
-🎙️ Speech-To-Text React App with Supabase & OpenAI Whisper
+🎙️ Speech-To-Text React App with Supabase & Datagram Whisper
 
 ![App Screenshot](./screenshots/app-home.png, modern web app to transcribe your speech from MP4 audio/video files, powered by React, Supabase authentication, and OpenAI Whisper.*
 🚀 Features
@@ -117,7 +117,7 @@ Technologies Used
 
     📁 Upload or 🎤 record MP4 audio/video files seamlessly
 
-    📝 Instant speech transcription powered by OpenAI Whisper API
+    📝 Instant speech transcription powered by Datgarm Whisper API
 
     🔄 Persistent user sessions with auto-login and sign-out
 
@@ -136,7 +136,7 @@ Prerequisites
 
     Supabase account & project
 
-    OpenAI API key
+    Datagram API key
 
 🛠️ Environment Variables
 
@@ -223,7 +223,7 @@ package.json
 
     Supabase Auth & Storage backend
 
-    OpenAI Whisper speech-to-text API
+    Datagram Whisper speech-to-text API
 
     Vite development server
 
