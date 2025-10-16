@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "./SupabaseClient";
 
-// const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
-
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -26,7 +24,7 @@ export default function SignUpPage() {
       className="min-h-screen w-full flex items-center justify-center"
       style={{
         background:
-          "url('/src/assets/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+          "url('./background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
       }}
     >
       <form

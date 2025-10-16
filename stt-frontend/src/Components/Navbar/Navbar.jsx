@@ -2,10 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../Superbase Auth/SupabaseClient";
 
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-// const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 export default function NavBar({ user, onSignOut }) {
   const navigate = useNavigate();
 
@@ -13,7 +9,7 @@ export default function NavBar({ user, onSignOut }) {
     await supabase.auth.signOut();
     if (onSignOut) onSignOut();
     // Optionally redirect to landing:
-    navigate("/dashboard");
+    navigate("/");
   };
 
   return (

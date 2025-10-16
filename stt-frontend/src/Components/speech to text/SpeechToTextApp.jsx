@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import supabase from "../Superbase Auth/SupabaseClient";
-import NavBar from "../Navbar.jsx/Navbar";
+import NavBar from "../Navbar/Navbar";
 import FileUploader from "../File upload/FileUploader";
 import RecordingControls from "../audiorecorder/AudioRecorder";
 import WaveformCanvas from "../Canvas/WaveformCanvas";
@@ -8,10 +8,6 @@ import StatusMessage from "../status/StatusMessage";
 import Mp3Player from "../audiorecorder/Mp3Player";
 import TranscriptionResult from "../Transciption/TranscriptionResult";
 import TranscriptionHistory from "../Transciption/TranscriptionHistory";
-//Supabase intialization
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-// const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function SpeechToTextApp() {
   const [user, setUser] = useState(null);
@@ -121,7 +117,7 @@ export default function SpeechToTextApp() {
       setStatus("Upload failed: " + err.message);
     }
     setLoading(false);
-  } // Waveform drawing functions here... (same as your code)
+  } // Waveform drawing functions here... 
 
   function drawWaveform() {
     const canvas = canvasRef.current;
@@ -138,7 +134,7 @@ export default function SpeechToTextApp() {
     analyser.current.getByteTimeDomainData(dataArray.current);
 
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#a78bfa"; // Tailwind indigo-400 for waveform line
+    ctx.strokeStyle = "#a78bfa"; 
 
     ctx.beginPath();
 
@@ -268,7 +264,7 @@ export default function SpeechToTextApp() {
         className="fixed inset-0 z-0"
         style={{
           background:
-            "url('/src/assets/background1.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+            "url('./background1.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
         }}
       />
 
@@ -279,7 +275,7 @@ export default function SpeechToTextApp() {
         <div className="bg-white/90 rounded-2xl shadow-2xl px-10 py-8 md:px-16 md:py-12 max-w-xl mx-auto overflow-y-auto">
           <div className="mb-8 flex flex-col items-center text-center">
             <img
-              src="/src/assets/mic.png"
+              src='./mic.png'
               alt="Speech Icon"
               className="w-16 h-16 mb-4 rounded-2xl"
             />

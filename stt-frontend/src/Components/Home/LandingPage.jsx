@@ -1,17 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../Navbar.jsx/Navbar";
+import NavBar from "../Navbar/Navbar";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  // Set your background image in Tailwind or with a style block below
 
   return (
     <div
       className="min-h-screen w-full relative flex flex-col justify-start items-start"
       style={{
         background:
-          "url('/src/assets/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+          "url('./background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
       }}
     >
       <NavBar />
