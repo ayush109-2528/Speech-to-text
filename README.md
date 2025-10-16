@@ -1,235 +1,98 @@
-Speech-to-Text React App with Supabase & Datagram
+🎤 Speech-to-Text Frontend (React)
 
-A modern web application for converting speech (MP4 audio/video) to text with user authentication using Supabase Auth and transcription via OpenAI Whisper API.
-Features
-
-    User authentication with email/social login using Supabase
-
-    Google OAuth support
-
-    Upload or record MP4 audio/video files
-
-    Transcription with OpenAI Whisper API
-
-    Manage user sessions with auto-login and sign-out
-
-    Responsive UI built with React and Tailwind CSS
-
-Demo
-
-Add a URL here if deployed
-Getting Started
-Prerequisites
-
-    Node.js (v16+ recommended)
-
-    npm or yarn
-
-    Supabase account & project
-
-    OpenAI API key
-
-Environment Variables
-
-Create a .env file in the project root with the following keys:
-
-text
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_Datagram_API_KEY=your-openai-api-key
-
-Installation
-
-# Install dependencies
-npm install
-
-# Run the development server
-npm run dev
-
-Supabase Setup
-
-    Create a Supabase project at supabase.com.
-
-    Enable Authentication providers (email, google, github).
-
-    Create a table called transcriptions with:
-
-        id (UUID, primary key)
-
-        user_id (UUID)
-
-        audio_url (text)
-
-        transcription (text)
-
-        created_at (timestamp, default now())
-
-    Create a Storage bucket named audiofiles, optionally public.
-
-Usage
-
-    Visit the app at http://localhost:5173.
-
-    Create an account or login with Google.
-
-    Upload or record your MP4 audio/video.
-
-    Wait for transcription and see results.
-
-    Use the sign-out button to log out.
-
-Folder Structure
-
-text
-src/
-  Components/
-    SupabaseAuth.jsx
-    SignOutButton.jsx
-    SpeechToTextApp.jsx
-  supabaseClient.js
-  App.jsx
-  main.jsx
-.env
-package.json
-
-Technologies Used
-
-    React 18
-
-    React Router v6
-
-    Tailwind CSS
-
-    Supabase Auth & Storage
-
-    OpenAI Whisper API
-
-    Vite development server
-
-🎙️ Speech-To-Text React App with Supabase & Datagram Whisper
-
-![App Screenshot](./screenshots/app-home.png, modern web app to transcribe your speech from MP4 audio/video files, powered by React, Supabase authentication, and OpenAI Whisper.*
+This React frontend provides a modern UI for recording, uploading, and viewing speech transcriptions powered by a Node.js backend with Deepgram and Supabase.
 🚀 Features
 
-    🔐 Secure user authentication with Supabase (email and social login)
+    🎙 Live audio recording with waveform visualization
 
-    🟢 Google OAuth support for easy login
+    ⬆️ Upload MP3/MP4 audio files for transcription
 
-    📁 Upload or 🎤 record MP4 audio/video files seamlessly
+    🧠 Real-time transcription display
 
-    📝 Instant speech transcription powered by Datgarm Whisper API
+    📜 Transcription history with play & delete capabilities
 
-    🔄 Persistent user sessions with auto-login and sign-out
+    🔒 Simple authentication integration via Supabase
 
-    📱 Responsive and accessible UI built with React & Tailwind CSS
+    🎨 Responsive, clean UI with Tailwind CSS
 
-🎬 Demo
-
-not yet
-
-🔧 Getting Started
-Prerequisites
-
-    Node.js (v16+ recommended)
-
-    npm or yarn
-
-    Supabase account & project
-
-    Datagram API key
-
-🛠️ Environment Variables
-
-Create a .env file at the root of your project and add:
-
-text
-VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
-VITE_OPENAI_API_KEY=your-openai-secret-key
-
-    ⚠️ Keep your API keys secure! Never commit .env files to public repos.
-
-⏳ Installation
+🛠️ Tech Stack
+Technology	Purpose
+React	UI & State Management
+Supabase	Auth & Database Client
+Fetch API	API communication
+Tailwind CSS	Styling & Layout
+⚙ Setup & Running Locally
+1. Clone repository:
 
 bash
-# Clone the repository
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/your-username/speech-to-text-frontend.git
+cd speech-to-text-frontend
 
-# Install dependencies
+2. Install dependencies:
+
+bash
 npm install
 
-# Start development server
-npm run dev
+3. Setup environment variables:
 
-🗂️ Supabase Setup
-
-    Create a new project at supabase.com.
-
-    Enable Authentication providers (email, Google, GitHub) in your dashboard.
-
-    Create a table named transcriptions with these columns:
-
-Column	Type	Notes
-id	uuid	Primary key, default generated
-user_id	uuid	Foreign key for user
-audio_url	text	Link to uploaded audio file
-transcription	text	Transcribed text
-created_at	timestamp	Defaults to current timestamp
-
-    Create a Storage bucket named audiofiles, enable public access if you want.
-
-📱 Usage
-
-    Access the app locally on http://localhost:5173
-
-    Register or sign in using Google or email
-
-    Upload an MP4 audio/video file or record live voice
-
-    Watch real-time transcription results
-
-    Use the Sign Out button in the header to log out
-
-🖼 Screenshots
-Home Page (Authenticated)
-
-![Home Page](
-Login / Authentication Page
-
-![Login Page](
-Upload & Transcription in Progress
-
-![Uploading](./screenshots/uploading.png Structure
+Create a .env file in the project root:
 
 text
-src/
-  Components/
-    SupabaseAuth.jsx        # Authentication UI
-    SignOutButton.jsx       # Sign out button component
-    SpeechToTextApp.jsx     # Main app with speech-to-text logic
-  supabaseClient.js         # Supabase initialization
-  App.jsx                   # Routing and session management
-  main.jsx                  # Entry point
-.screenshots/               # Folder containing screenshots
-.env                       # Environment config (not committed)
-package.json
+VITE_API_URL=http://localhost:5000
 
-💻 Tech Stack
+Adjust API URL for your deployed backend.
+4. Run development server:
 
-    React 18, React Router v6
+bash
+npm run dev
 
-    Tailwind CSS for UI
+5. Open your browser and go to:
 
-    Supabase Auth & Storage backend
+text
+http://localhost:5173
 
-    Datagram Whisper speech-to-text API
+🔗 Backend Integration
 
-    Vite development server
+    All API calls send authenticated user ID in "x-user-id" header.
 
-🤝 Contributing
+    Audio is streamed or uploaded to backend endpoints /upload, /upload-chunk, /stop-recording.
 
-Contributions are welcome! Please open an issue or submit a pull request for improvements or bug fixes.
+    Transcriptions fetched from /transcriptions endpoint and displayed.
+
+🎨 UI Components
+
+    NavBar: Sign-in/out management
+
+    FileUploader: Upload audio files
+
+    RecordingControls: Record and control live audio
+
+    WaveformCanvas: Visualize audio recording waveform
+
+    StatusMessage: Show status/errors
+
+    Mp3Player: Playback recorded audio
+
+    TranscriptionResult: Display current transcription
+
+    TranscriptionHistory: List and manage past transcriptions
+
+🧪 Testing & Debugging
+
+    The frontend uses console logs and status messages for feedback.
+
+    Ensure backend is running with correct env vars.
+
+    Watch network requests for API error details.
+
+🚀 Deployment Notes
+
+    Use environment variable VITE_API_URL to point to production backend.
+
+    Build optimized production bundle with npm run build.
+
+    Deploy on any static host like Netlify, Vercel, GitHub Pages.
+
 📜 License
 
-© 2025 Ayush
+MIT License.
