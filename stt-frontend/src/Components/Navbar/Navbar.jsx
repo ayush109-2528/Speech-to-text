@@ -9,7 +9,7 @@ export default function NavBar({ user, onSignOut }) {
     await supabase.auth.signOut();
     if (onSignOut) onSignOut();
     // Optionally redirect to landing:
-    navigate("/");
+    navigate("/landing");
   };
 
   return (
