@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function FileUploader({ file, onFileChange, onUpload, loading, recording }) {
   return (
     <div className="mb-6 flex flex-col md:flex-row items-center md:space-x-4 space-y-3 md:space-y-0">

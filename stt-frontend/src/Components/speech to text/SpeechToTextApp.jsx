@@ -9,6 +9,7 @@ import Mp3Player from "../audiorecorder/Mp3Player";
 import TranscriptionResult from "../Transciption/TranscriptionResult";
 import TranscriptionHistory from "../Transciption/TranscriptionHistory";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function SpeechToTextApp() {
   const [user, setUser] = useState(null);
   const [recording, setRecording] = useState(false);
@@ -49,7 +50,7 @@ export default function SpeechToTextApp() {
   async function fetchHistory() {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/transcriptions");
+      const res = await fetch(`${API_BASE_URL}transcriptions`);
       if (!res.ok) throw new Error("Failed to fetch history");
       const data = await res.json();
       setHistory(data);
@@ -100,7 +101,7 @@ export default function SpeechToTextApp() {
     formData.append("audio", file);
 
     try {
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch(`${API_BASE_URL}upload`, {
         method: "POST",
         headers: { "x-user-id": userId },
         body: formData,
@@ -187,7 +188,7 @@ export default function SpeechToTextApp() {
           const formData = new FormData();
           formData.append("chunk", e.data, "chunk.webm");
           try {
-            await fetch("http://localhost:5000/upload-chunk", {
+            await fetch(`${API_BASE_URL}upload-chunk`, {
               method: "POST",
               headers: { "x-user-id": userId },
               body: formData,
@@ -221,12 +222,12 @@ export default function SpeechToTextApp() {
       audioContext.current.close();
       setStatus("Processing...");
       try {
-        const res = await fetch("http://localhost:5000/stop-recording", {
+        const res = await fetch(`${API_BASE_URL}stop-recording`, {
           method: "POST",
           headers: { "x-user-id": userId },
         });
         const data = await res.json();
-        setMp3Url("http://localhost:5000" + data.mp3);
+        setMp3Url(`${API_BASE_URL}` + data.mp3);
         setTranscription(data.transcription);
         setStatus("Recording complete!");
         await fetchHistory();
@@ -240,7 +241,7 @@ export default function SpeechToTextApp() {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/transcriptions/${id}`, {
+      const res = await fetch(`${API_BASE_URL}transcriptions/${id}`, {
         method: "DELETE",
         headers: { "x-user-id": userId }, // optional, if you want to authorize deletes
       });
