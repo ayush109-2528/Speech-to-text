@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function FileUploader({ file, onFileChange, onUpload, loading, recording }) {
   return (
     <div className="mb-6 flex flex-col md:flex-row items-center md:space-x-4 space-y-3 md:space-y-0">
@@ -9,14 +7,14 @@ export default function FileUploader({ file, onFileChange, onUpload, loading, re
           accept="audio/*"
           onChange={onFileChange}
           disabled={loading || recording}
-          className="
-            file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm 
-            file:bg-indigo-600 file:text-white file:cursor-pointer 
-            block w-full text-gray-800 border-2 border-gray-200 rounded-lg 
-            transition
-          "
+          className="file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:bg-indigo-600 file:text-white file:cursor-pointer block w-full text-gray-800 border-2 border-gray-200 rounded-lg transition"
         />
       </div>
+      {file && (
+        <div className="text-gray-700 font-medium">
+          {file.name.length > 30 ? file.name.slice(0, 27) + "..." : file.name}
+        </div>
+      )}
       <button
         onClick={onUpload}
         disabled={!file || loading || recording}
