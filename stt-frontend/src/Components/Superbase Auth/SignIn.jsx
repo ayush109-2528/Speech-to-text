@@ -23,7 +23,7 @@ export default function SignInPage() {
       className="min-h-screen w-full flex items-center justify-center"
       style={{
         background:
-          "url('/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+          "url('/src/assets/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
       }}
     >
       <form onSubmit={handleSignIn} className="bg-white bg-opacity-90 backdrop-blur-lg max-w-md w-full p-8 rounded-lg shadow-lg">

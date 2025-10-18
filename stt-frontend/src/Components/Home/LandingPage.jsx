@@ -10,7 +10,7 @@ export default function LandingPage() {
       className="min-h-screen w-full relative flex flex-col justify-start items-start"
       style={{
         background:
-          "url('/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+          "url('/src/assets/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
       }}
     >
       <NavBar />
