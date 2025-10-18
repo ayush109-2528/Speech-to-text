@@ -9,10 +9,12 @@ export default function LandingPage() {
     <div
       className="min-h-screen w-full relative flex flex-col justify-start items-start"
       style={{
-        background:
-          "url('/src/assets/background.png') center center / cover no-repeat, linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
-      }}
-    >
+    backgroundImage: "url('../assets/background.png'), linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+  }}
+>
       <NavBar />
       <div className="z-10 mt-28 ml-10 md:mt-40 md:ml-24 text-left w-full max-w-2xl">
         <h1 className="text-5xl font-extrabold text-white mb-8 leading-tight">
