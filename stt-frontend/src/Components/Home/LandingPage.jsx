@@ -9,7 +9,7 @@ export default function LandingPage() {
     <div
       className="min-h-screen w-full relative flex flex-col justify-start items-start"
       style={{
-    backgroundImage: "url('../assets/background.png'), linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
+    backgroundImage: "url('./background.png'), linear-gradient(to bottom right,#000A2E 80%, #170024 100%)",
     backgroundPosition: "center center",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
